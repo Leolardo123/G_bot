@@ -1,0 +1,31 @@
+{
+  "name": "gulag-bot",
+  "version": "1.0.0",
+  "description": "Um bot politicamente incorreto",
+  "main": "bot.js",
+  "dependencies": {
+    "discord.js": "^12.5.1",
+    "fluent-ffmpeg": "^2.1.2",
+    "sequelize": "^6.3.5",
+    "sqlite3": "^5.0.0",
+    "ytdl-core": "^4.2.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Leolardo123/G_bot.git"
+  },
+  "keywords": [
+    "discord",
+    "bot"
+  ],
+  "author": "Leonardo Ferreira dos Santos",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Leolardo123/G_bot/issues"
+  },
+  "homepage": "https://github.com/Leolardo123/G_bot#readme"
+}

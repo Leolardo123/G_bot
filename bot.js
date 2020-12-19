@@ -3,20 +3,14 @@ const Sequelize = require('sequelize')
 const fs = require('fs')
 const client = new Discord.Client();
 const config = require("./config.json");
-const db_functions = require("./DB_functions");
-const db_tables = require("./DB_tables");
+const ytdl = require('ytdl-core');
 const commandFiles = fs.readdirSync('./comandos').filter(file => file.endsWith('.js'));
+const commandHandler = require('./command_handler')
 client.commands = new Discord.Collection();
-
-for (const file of commandFiles) {
-	const command = require(`./comandos/${file}`);
-	client.commands.set(command.name, command);
-}
 
 client.on("ready",()=>{
     console.log(`Bot iniciado com tag ${client.user.tag}, com ${client.users.size} usuarios`);
     client.user.setActivity(`Half Life 3`);
-    db_tables.load_config();
 })
 
 client.on("guildCreate", guild => {
@@ -36,10 +30,9 @@ client.on('voiceStateUpdate', (oldMember, newMember) => {
     if(newUserChannel==null)return
     if(newUserChannel!=oldUserChannel){
         if(newUserChannel.id=='770417386029187092')return 
-        console.log(JSON.stringify(newMember.id))
         if(newMember.id=='362229189782405122'){
             newUserChannel.join().then(connection=>{//Leonardo Ferreira
-                const dispatcher = connection.play('./audios/meme eta porra com fundo verde_160k.mp3')
+                const dispatcher = connection.play(ytdl('https://www.youtube.com/watch?v=hrdPqXa9wYY'))
                 if (!dispatcher) return message.channel.send('soundNotFound');
                 dispatcher.on('end', () => { 
                     play(connection);
@@ -70,6 +63,14 @@ client.on('voiceStateUpdate', (oldMember, newMember) => {
                     play(connection);
                 });
             })
+        }else{
+            newUserChannel.join().then(connection=>{
+                const dispatcher = connection.play(ytdl('https://www.youtube.com/watch?v=hrdPqXa9wYY'))
+                if (!dispatcher) return message.channel.send('soundNotFound');
+                dispatcher.on('end', () => { 
+                    play(connection);
+                });
+            })
         }
     }
   });
@@ -78,35 +79,8 @@ client.on("message",async msg => {
     const comandos_aceitos = require('./indice_comandos.json')
     if(msg.content.startsWith(config.prefix)){
         const command = msg.content.slice(config.prefix.length).trim().split(' ')
-        const detalhes =  {
-            autor:msg.author.username,
-            argumentos:command[1]
-        }
         try{
-            console.log(command)
-            for(var i=0;i<comandos_aceitos.length;i++){
-                console.log(comandos_aceitos[i])
-            }
-            if(command[0]=="ping"){
-                client.commands.get('ping').execute(msg,null)
-            }
-            if(command[0]=="criar"||command[0]=="cr"){
-                client.commands.get('criar_personagem').execute(msg,detalhes)
-            }
-            if(command[0]=="listar"||command[0]=="l"){
-                if(command[1]=="personagens"||command[1]=="p"){
-                    client.commands.get('listar_personagens').execute(msg,detalhes)
-                } 
-            }
-            if(command[0]=="info"){
-                var lista_comandos = "\n\n"
-                console.log(comandos_aceitos)
-                for(var item in comandos_aceitos){
-                    lista_comandos = lista_comandos+'<h1>'+item+'</h1>'
-                    lista_comandos = lista_comandos+","
-                }
-                msg.channel.send(lista_comandos);
-            }
+            commandHandler.manusear_indice_comandos(msg,client);
         }catch(err){
             console.log("houve um erro \n"+err)
         }
@@ -114,3 +88,37 @@ client.on("message",async msg => {
 })
 
 client.login(config.token);
+
+/*
+if(command[0]=="adm"){
+    if(msg.member.id=='362229189782405122'){
+        if(command[1]=='cr'){
+            if(command[2]=='cmd')client.commands.get('criar_comando').execute(msg,command[3])
+        }else{
+            console.log(comandos_aceitos)
+        }
+    }else{
+        msg.reply("Você não tem permissão para usar esse comando!")
+    }
+    command_adm = null;
+}
+
+if(command[0]=="ping"){
+    client.commands.get('ping').execute(msg,null)
+}else
+if(command[0]=="criar"||command[0]=="cr"){
+    if(command[1]=="personagem"||command[1]=="p")client.commands.get('criar_personagem').execute(msg,detalhes)
+}else
+if(command[0]=="listar"||command[0]=="l"){
+    if(command[1]=="personagens"||command[1]=="p")client.commands.get('listar_personagens').execute(msg,detalhes)  
+}else
+if(command[0]=="info"){
+    var lista_comandos = new Discord.MessageEmbed();
+    lista_comandos.setTitle("Comandos aceitos")
+    for(var item in comandos_aceitos){
+        lista_comandos.addField(comandos_aceitos)
+    }
+    msg.channel.send(lista_comandos);
+}else{
+    msg.reply("Comando não existe, por favor verifique e tente novamente!")
+}*/
