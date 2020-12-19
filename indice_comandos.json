@@ -1,0 +1,13 @@
+{
+    "criar":[
+        {
+            "personagem":"<nome>"
+        }
+    ],
+    "listar":[
+        {
+            "personagens":"{p1,p2,...,pn}"
+        }
+    ],
+    "info":"informacoes"
+}
