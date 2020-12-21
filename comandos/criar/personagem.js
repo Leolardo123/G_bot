@@ -5,12 +5,14 @@ module.exports = {
     name: "criar personagem",
     description: "cria um jogador para o jogo do gulag bot",
     sintaxe:"criar personagem <nome>",
+    args:true,//comando ultiliza argumentos (sim ou não)
+    argsQtd:1,
     execute(message,detalhes){
-        if(detalhes.argumentos!=null){
-            var nome= detalhes.argumentos.slice("criar ");
-            funcoes_bd.insere_personagem(detalhes.argumentos,detalhes.autor,message)
+        if(detalhes.length>=this.argsQtd){
+            var nome = detalhes[0];
+            funcoes_bd.insere_personagem(nome,message)
         }else{
-            message.channel.send('Para criar jogador digite: \n'+mk_per_cmd)
+            message.channel.send('Algum argumento está faltando, comando correto\n'+this.sintaxe)
         }
     },
 }

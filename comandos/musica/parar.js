@@ -6,6 +6,7 @@ module.exports = {
     name:"musica parar",
     description:"para a musica que está tocando",
     sintaxe:config.prefix+"musica parar",
+    args:false,//comando ultiliza argumentos (sim ou não)
     execute:function(message,detalhes){
     }
 }

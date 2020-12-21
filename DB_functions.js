@@ -2,11 +2,11 @@ const { Message, MessageEmbed } = require('discord.js');
 const { Sequelize } = require('sequelize');
 const tabelas = require('./DB_tables')
 
-async function insere_personagem(nomePersonagem,autor,message){
+async function insere_personagem(nomePersonagem,message){
     const NewPersonagem = tabelas.Personagem.create({
         nome:nomePersonagem,
         descrição:"nenhuma",
-        username:autor
+        username:message.author.id
     }).then(function(res){
             return message.reply('Criado Personagem:\n'+nomePersonagem)
     }).catch(function(err){

@@ -1,33 +1,32 @@
-const Discord = require("discord.js")
-const Sequelize = require('sequelize')
-const fs = require('fs')
 const config = require("./config.json")
-const indice_comandos = require('./indice_comandos.json')
-
-var commandFiles = indice_comandos
-function carregar_comandos(){
-    const command = require(`./comandos/${arquivo}`);
-    client.commands.set(command.name, command);
-    for(var tipo in indice_comandos){
-        commandFiles = fs.readdirSync('./comandos/'+tipo).filter(file => file.endsWith('.js'))
-        commandFiles.forEach((arquivo)=>{
-            const command = require(`./comandos/${tipo}/${arquivo}`);
-            client.commands.set(command.name, command);
-        })
-    }
-}
-
-function manusear_indice_comandos(msg,client){//percorre o arquivo indice_comandos.json
-    carregar_comandos();
+const fs = require('fs')
+function manusear_indice_comandos(msg,client){
+    const command = msg.content.slice(config.prefix.length).trim().split(' ')
+    const args  = new Array()
+    var cmdDir =  msg.content.slice(config.prefix.length).replace(' ','/');
     try{
-        client.commands.get(command).execute
+        for(var i=command.length-1;i>=0;i--){
+            if(fs.existsSync('./comandos/'+cmdDir+'.js')){
+                var cmd = cmdDir.replace('/',' ')//recupera o formato original do comando
+                console.log(cmd)
+                if((client.commands.get(cmd).args==false&&args.length==0)||client.commands.get(cmd).args==true){//Executa comando se não achou nenhum argumento caso comando nao possua nenhum, ou se o comando permite argumentos 
+                    client.commands.get(cmd).execute(msg,args)
+                    return true
+                }else{
+                    return false
+                }
+            }else{
+                cmdDir = cmdDir.replace(command[i],'').slice(0,-1)
+                args.push(command[i])
+            }
+        }
+        return false
     }catch(e){
         console.log(e);
-        msg.reply("comando não existe!")
+        return false
     }
 }
 
-
 module.exports = {
-    manusear_indice_comandos:manusear_indice_comandos
+    manusear_indice_comandos:manusear_indice_comandos,
 }

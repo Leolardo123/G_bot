@@ -5,7 +5,9 @@ module.exports = {
     name:"listar personagens",
     description:"Lista todos os personagens do usuário",
     sintaxe:"listar personagens",
+    args:false,//comando ultiliza argumentos (sim ou não)
     execute:function(message,detalhes){
-        funcoes_bd.lista_meus_personagens(detalhes.autor,message)
+        console.log(message)
+        funcoes_bd.lista_meus_personagens(message.author.id)
     }
 }

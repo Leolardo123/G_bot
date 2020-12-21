@@ -5,6 +5,7 @@ module.exports = {
     name:"musica proximo",
     description:"pula a musica atual",
     sintaxe:config.prefix+"musica proximo",
+    args:false,//comando ultiliza argumentos (sim ou não)
     execute:function(message,detalhes){
     }
 }
